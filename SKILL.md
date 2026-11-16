@@ -2,7 +2,7 @@
 name: wiki-this
 description: "Use for /wiki-this, or when someone wants a wiki, knowledge base or domain guide generated from one or more folders, repos or projects, merged into one site with a filter per source."
 metadata:
-  version: "1.2.1"
+  version: "1.3.0"
 ---
 
 # Wiki This
@@ -18,12 +18,16 @@ unless a step says otherwise.
 
 ## Helpers
 
-- `scripts/`: `lookgen.mjs` (looks), `shot.mjs` (self-check), `build-sample.sh`.
+- `scripts/`: `lookgen.mjs` (looks), `shot.mjs` (self-check), `build-sample.sh`,
+  `build-glossary-fixture.mjs`, `check-glossary.mjs`.
 - `assets/shell/`: `base.css`, `look.js`, `app.js`, `tip.js` (the shell).
+- `assets/glossary/`: pinned map (`map.js`, `map.css`, `dict-tokens.css`, Inter fonts,
+  `wire.js`, `glossary-shell.css`). See `assets/glossary/PIN.md`.
 - `references/`: `spec.md` (design rules), `sample/` (neutral example data and looks).
 - `examples/`: a sample five-step lesson page.
 - Smoke test: `sh <skill-dir>/scripts/build-sample.sh /tmp/sample-wiki`, then open
-  `article.html`.
+  `article.html`. Glossary map fixture:
+  `node <skill-dir>/scripts/build-glossary-fixture.mjs /tmp/glossary-fixture`.
 
 ## 1. Read the request
 
@@ -118,12 +122,42 @@ Each wiki gets a fresh look: light or dark, a base hue, one accent and one typef
 - Copy `<skill-dir>/assets/shell/*` and `looks.js` into the project; load `looks.js`, `look.js`,
   `base.css`, and `app.js`.
 
-## 6. Local glossary
+## 6. Local glossary (map + A to Z)
 
-Build a Glossary page in the same shell: one term per row, the filter, and the same look. Shared
-terms show each source's meaning. A plain list is enough. Do not call a third-party glossary
-service, and do not add a new skill dependency. Any "Sources" line lists names as links (step 2
-rule); before finishing, check the built pages show no visible `https://` text.
+Build a Glossary page that ships the pinned map from `<skill-dir>/assets/glossary/`, in the same
+wiki shell and look. Sunny's approved Dark look matches the AI Coding Dictionary term map
+(full-bleed stage, greyscale discs, docked term sheet, Inter + `dict-tokens.css`).
+
+**Copy the pinned assets** into the wiki (for example `assets/glossary/`): `map.js`, `map.css`,
+`dict-tokens.css`, `glossary-shell.css`, `wire.js`, and `fonts/`. This pinned copy will be
+replaced by the shared `term-map` from dictionary-this once that lands. Do not call a
+third-party glossary service.
+
+**Page shape**
+
+- A full-bleed `#graph.ge-stage` with canvas, labels, flat SVG slot, floating chrome (title,
+  source chips, Map/List, zoom, toast), a docked `.ge-sheet`, and a bottom-left map key.
+- Under the map: heading "All terms, A to Z" and `#terms` with one `<details>` per term. That
+  list is the accessible twin and the no-WebGL / no-JS reading path. Shared terms show each
+  source's meaning. `wire.js` paints the list and dispatches `wiki:filter` / `wiki:term`.
+- Term model for the map: each `byId` entry needs `id`, `name`, `sec`, `src[]`, `defs{}`, plus
+  `related[]` (edge links) and `used[]` (article ids; also drives co-occurrence edges). Set
+  `WIKI.articles` for "Used in" labels. Source filter stays in `?src=`; open a term with
+  `?term=`.
+- Load order: data → `wire.js` → `map.js`. Set `data-page="glossary"` on `<html>`.
+
+**Fallbacks and motion**
+
+- No WebGL2, or `?gl=0`: `map.js` draws the same map as flat SVG (`data-gl=off`). Keep the A to Z
+  list underneath either way.
+- `prefers-reduced-motion: reduce`: no intro spin, no drift, instant camera moves, no sheet
+  animation, sound stays off.
+- Any "Sources" line lists names as links (step 2 rule); before finishing, check the built pages
+  show no visible `https://` text.
+
+Fixture and gate: `node <skill-dir>/scripts/build-glossary-fixture.mjs <out>` then
+`node <skill-dir>/scripts/check-glossary.mjs <out> <shots>` (Playwright + axe at 1440, 390 and
+360 in light and dark; fails on horizontal overflow, contrast violations or label overlap).
 
 ## 7. Lesson preview and waitlist footer
 
@@ -162,8 +196,10 @@ Write a `screens.json` for the project (format and actions in `scripts/shot.mjs`
 looks at 1440x900 and 390x844: article, lesson preview, glossary (with a term open), section.
 Phone widths run as a touch device. Then `node <skill-dir>/scripts/shot.mjs . screens.json checks`.
 Pass means: 0 AAA failures, 1 family, 0 dead controls, 0px `data-al` spread on the 12-column
-overlay, no phone overflow, no console errors, 0 audio contexts before a gesture. Look at every
-screenshot, fix and rerun, then grep the output for secrets, emails and seeds.
+overlay, no phone overflow, no console errors, 0 audio contexts before a gesture. For the
+glossary map, also run `check-glossary.mjs` at 1440, 390 and 360 (light and dark, term open and
+`?gl=0`): 0 horizontal overflow, 0 axe contrast violations, 0 label-over-disc or label-over-label.
+Look at every screenshot, fix and rerun, then grep the output for secrets, emails and seeds.
 
 ## 10. Report
 

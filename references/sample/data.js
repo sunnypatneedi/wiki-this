@@ -11,6 +11,11 @@ window.WIKI = {
     { id: "validation", name: "Validation" },
     { id: "shared", name: "Shared caches" }
   ],
+  articles: {
+    "freshness-lifetime": "Freshness lifetime",
+    validation: "Validation",
+    "shared-caches": "Shared caches"
+  },
   terms: [
     ["cache-control", "Cache-Control", "freshness"],
     ["max-age", "max-age", "freshness"],
@@ -24,6 +29,8 @@ window.WIKI.byId = {
   "cache-control": {
     id: "cache-control", name: "Cache-Control", sec: "freshness",
     src: ["mdn", "rfc"],
+    related: ["max-age", "private", "s-maxage"],
+    used: ["freshness-lifetime", "shared-caches"],
     defs: {
       mdn: "The main header that tells browsers and other caches how long, and where, a response may be stored.",
       rfc: "A response directive list that controls freshness, reuse, and whether a cache may store the representation."
@@ -32,6 +39,8 @@ window.WIKI.byId = {
   "max-age": {
     id: "max-age", name: "max-age", sec: "freshness",
     src: ["mdn", "rfc"],
+    related: ["cache-control", "s-maxage"],
+    used: ["freshness-lifetime"],
     defs: {
       mdn: "The number of seconds a response stays fresh after it is generated.",
       rfc: "A freshness lifetime in seconds, measured from the origin's Date."
@@ -40,6 +49,8 @@ window.WIKI.byId = {
   "etag": {
     id: "etag", name: "ETag", sec: "validation",
     src: ["mdn", "rfc"],
+    related: ["if-none-match"],
+    used: ["validation"],
     defs: {
       mdn: "An opaque validator the server can use to see if a stored copy is still current.",
       rfc: "A validator field on a representation, compared in conditional requests."
@@ -48,6 +59,8 @@ window.WIKI.byId = {
   "if-none-match": {
     id: "if-none-match", name: "If-None-Match", sec: "validation",
     src: ["mdn", "rfc"],
+    related: ["etag"],
+    used: ["validation"],
     defs: {
       mdn: "The request header that sends stored ETags so the server can answer 304 Not Modified.",
       rfc: "A precondition that succeeds when none of the listed validators match."
@@ -56,6 +69,8 @@ window.WIKI.byId = {
   "private": {
     id: "private", name: "private", sec: "shared",
     src: ["mdn", "rfc"],
+    related: ["cache-control", "s-maxage"],
+    used: ["shared-caches"],
     defs: {
       mdn: "A directive that limits storage to a single-user cache, such as a browser.",
       rfc: "The response must not be stored by a shared cache."
@@ -64,6 +79,8 @@ window.WIKI.byId = {
   "s-maxage": {
     id: "s-maxage", name: "s-maxage", sec: "shared",
     src: ["rfc"],
+    related: ["max-age", "cache-control", "private"],
+    used: ["freshness-lifetime", "shared-caches"],
     defs: {
       rfc: "A freshness lifetime, in seconds, that applies only to shared caches and overrides max-age for them."
     }

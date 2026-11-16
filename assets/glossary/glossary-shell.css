@@ -1,0 +1,54 @@
+/* Minimal shell chrome for a glossary page that embeds the pinned map.
+   Load after dict-tokens.css. map.css styles the stage and the A to Z list. */
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{font-family:var(--font-sans,Inter,system-ui,sans-serif);background:var(--paper);color:var(--ink)}
+body{min-height:100vh;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--color-focus,var(--ink));outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mute{color:var(--color-text-muted)}
+
+.app{display:grid;grid-template-columns:minmax(0,1fr);min-height:100vh}
+.side{display:none}
+.top{height:56px;display:flex;align-items:center;gap:16px;padding:0 16px;border-bottom:1px solid var(--color-line-faint);background:color-mix(in srgb,var(--paper) 80%,transparent);backdrop-filter:blur(12px);position:sticky;top:0;z-index:20}
+.search{position:relative;flex:1;max-width:360px}
+.search input{width:100%;height:36px;padding:0 48px 0 12px;border:1px solid var(--color-line);border-radius:999px;background:var(--color-fill-subtle);font-size:14px;color:var(--ink)}
+.search kbd{position:absolute;right:8px;top:8px;height:20px;padding:0 6px;border:1px solid var(--color-line-faint);border-radius:999px;font:500 12px/18px var(--font-sans);color:var(--color-text-muted)}
+.top .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.icon{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:999px;color:var(--ink)}
+.icon:hover{background:var(--color-fill-subtle)}
+.icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6}
+.snd .off,.snd[aria-pressed=true] .on{display:none}
+.snd[aria-pressed=true] .off{display:inline}
+.snd[aria-disabled=true]{color:var(--color-text-muted);cursor:not-allowed}
+
+.mhead{display:none}
+.mchips{display:none}
+.drawer{display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;width:288px;max-width:85vw;z-index:50;background:var(--paper);border-right:1px solid var(--color-line-faint);transform:translateX(-100%);transition:transform .32s cubic-bezier(.16,1,.3,1);overflow:auto;visibility:hidden}
+.drawer.open{transform:none;visibility:visible}
+.drawer .brand{display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 8px 0 24px;border-bottom:1px solid var(--color-line-faint);font-size:14px;font-weight:600}
+.drawer .brand .sl{color:var(--color-text-muted);font-weight:400}
+.drawer .nav{padding:16px;display:grid;gap:16px}
+.drawer .lbl{font-size:12px;font-weight:500;color:var(--color-text-muted);padding:0 8px 8px}
+.drawer .it{display:flex;align-items:center;gap:12px;width:100%;height:36px;padding:0 8px;border-radius:8px;font-size:14px;color:var(--color-text-secondary);text-align:left}
+.drawer .it[aria-pressed=true],.drawer .it[aria-current=page]{background:var(--color-fill-subtle);color:var(--ink);font-weight:500}
+.scrimd{display:block;position:fixed;inset:0;z-index:40;background:var(--color-scrim);opacity:0;pointer-events:none;transition:opacity .32s}
+.scrimd.open{opacity:1;pointer-events:auto}
+
+.main{padding:0 48px 64px}
+@media (max-width:700px){
+  .top .search{display:none}
+  .mhead{display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 8px 0 16px;border-bottom:1px solid var(--color-line-faint);font-size:14px;font-weight:600}
+  .mhead .sl{color:var(--color-text-muted);font-weight:400}
+  .mhead .mr{display:flex;align-items:center}
+  .mchips{display:flex;gap:8px;padding:8px 16px;border-bottom:1px solid var(--color-line-faint);overflow-x:auto;scrollbar-width:none}
+  .mchips .it{width:auto;height:36px;padding:0 12px;border:1px solid var(--color-line-faint);border-radius:999px;white-space:nowrap;flex:none;font-size:14px}
+  .mchips .it[aria-pressed=true]{border-color:var(--ink);background:var(--color-fill-subtle)}
+  .main{padding:0 16px 96px}
+  .top{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .drawer,.scrimd{transition:none}
+}

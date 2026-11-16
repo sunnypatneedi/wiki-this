@@ -14,15 +14,19 @@ Each lesson ends with a link to join a waitlist. The lesson file itself collects
 
 ## What you get
 
-Each run builds a local wiki plus a 3D glossary of its terms.
+Each run builds a local wiki plus a 3D glossary map of its terms (with an A to Z list underneath).
 
 ![Article page for Freshness lifetime on a near-black wiki](docs/images/dark-article-1440.png)
 
 Sample wiki built from public HTTP caching docs.
 
-![3D glossary graph with a Cache-Control hover card](docs/images/dark-glossary-hover-card-1440.png)
+![Glossary map with the Cache-Control term sheet open at 1440px](docs/images/dark-glossary-term-1440.png)
 
-Preview of the next look. Sample wiki built from public HTTP caching docs.
+![Glossary map overview at 1440px](docs/images/dark-glossary-map-1440.png)
+
+![Glossary term sheet on a phone at 390px](docs/images/dark-glossary-term-390.png)
+
+Sample wiki built from public HTTP caching docs.
 
 [Watch the 13s demo](docs/images/dark.webm)
 
