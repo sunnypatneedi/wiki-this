@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary · HTTP Caching Wiki</title>
+<script src="../references/sample/looks.js"></script>
+<script src="../assets/shell/look.js"></script>
+<link rel="stylesheet" href="../assets/shell/base.css">
+<script src="../references/sample/data.js"></script>
+<script src="../assets/shell/app.js"></script>
+<script src="../assets/shell/tip.js" defer></script>
+<style>
+.hd{padding:48px 0 24px;grid-column:1 / -1}
+.hd h1{font-size:44px;max-width:16ch}
+.dek{margin-top:12px;font-size:20px;line-height:1.4;color:var(--body);max-width:36ch}
+.crumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mute);margin-bottom:16px}
+.prose{grid-column:1 / span 8;font-size:16px;line-height:1.6;color:var(--body);display:grid;gap:16px;padding-bottom:48px}
+.fig{grid-column:1 / -1;background:var(--panel);border:1px solid var(--rule);border-radius:var(--r);padding:24px;margin:8px 0 32px}
+.fig svg{display:block;width:100%;height:auto}
+.card{grid-column:9 / span 4;align-self:start;background:var(--panel);border:1px solid var(--rule);border-radius:var(--r);padding:16px;display:grid;gap:8px}
+.card h2{font-size:16px}
+.card p{font-size:14px;color:var(--body)}
+.tl{display:grid;gap:8px;padding:32px 0}
+.tl a{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:16px;font-weight:500}
+.st{padding:64px 0 0;max-width:640px}
+.st h2{font-size:20px;margin-bottom:8px}
+.st p{color:var(--body)}
+.q{margin-top:16px}
+.q label{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:14px;cursor:pointer}
+.fb{margin-top:12px;font-size:14px;color:var(--body)}
+.fb.bad{color:var(--ink)}
+.rail{position:sticky;top:80px;display:grid;gap:8px;font-size:12px}
+.rail a[aria-current=step]{font-weight:600;color:var(--ink)}
+.rail a{color:var(--mute)}
+@media (max-width:700px){.hd h1{font-size:28px}.card{margin-top:24px}}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<aside class="side" data-al="side">
+  <a class="brand" data-keep href="article.html">HTTP Caching <span class="sl">Wiki</span></a>
+  <div class="nav">
+    <div>
+      <div class="lbl" id="sl">Sources</div>
+      <div role="group" aria-labelledby="sl">
+        <button class="it" data-src="" aria-pressed="true"><i class="mk all"></i>All<span class="n" data-sn="all"></span></button>
+        <button class="it" data-src="mdn" aria-pressed="false"><i class="mk"></i>MDN<span class="n" data-sn="mdn"></span></button>
+        <button class="it" data-src="rfc" aria-pressed="false"><i class="mk rf"></i>RFC 9111<span class="n" data-sn="rfc"></span></button>
+      </div>
+    </div>
+    <nav aria-labelledby="chl">
+      <div class="lbl" id="chl">Sections</div>
+      <a class="it" data-keep href="glossary.html" data-cz="freshness"><span>Freshness</span><span class="n" data-cn="freshness"></span></a>
+      <a class="it" data-keep href="glossary.html" data-cz="validation"><span>Validation</span><span class="n" data-cn="validation"></span></a>
+      <a class="it" data-keep href="glossary.html" data-cz="shared"><span>Shared caches</span><span class="n" data-cn="shared"></span></a>
+    </nav>
+    <nav>
+      <a class="it" data-keep href="glossary.html" aria-current="page">Glossary</a>
+      <a class="it" data-keep href="article.html" >Freshness lifetime</a>
+    </nav>
+  </div>
+  <div class="ft">2 sources · read only</div>
+</aside>
+
+<div>
+
+<div class="top">
+  <div class="search">
+    <label class="sr" for="q">Search terms</label>
+    <input id="q" type="search" placeholder="Search" autocomplete="off" aria-expanded="false" aria-controls="res">
+    <kbd>⌘K</kbd>
+    <div id="res" class="res" role="listbox"></div>
+  </div>
+</div>
+
+
+<div class="mhead"><span>HTTP Caching <span class="sl">Wiki</span></span><span class="mr"><button class="icon" data-act="menu" aria-expanded="false" aria-label="Open menu"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg></button></span></div>
+<div class="mchips" role="group" aria-label="Sources">
+  <button class="it" data-src="" aria-pressed="true"><i class="mk all"></i>All</button>
+  <button class="it" data-src="mdn" aria-pressed="false"><i class="mk"></i>MDN</button>
+  <button class="it" data-src="rfc" aria-pressed="false"><i class="mk rf"></i>RFC 9111</button>
+</div>
+<div class="scrimd"></div>
+<div class="drawer" aria-label="Menu">
+  <div class="brand"><a data-keep href="article.html">HTTP Caching <span class="sl">Wiki</span></a>
+    <button class="icon" data-act="menu" aria-label="Close menu"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg></button>
+  </div>
+</div>
+
+<main class="main">
+  <section class="hd">
+    <div class="lbl">Glossary</div>
+    <h1>Terms</h1>
+    <p class="dek">One definition per source, plus a short shared line.</p>
+  </section>
+  <div class="tl" id="terms"></div>
+</main>
+</div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const root = document.getElementById("terms");
+  const q = new URLSearchParams(location.search);
+  const only = q.get("term");
+  const paint = (src) => {
+    const terms = Object.values(WIKI.byId).filter(t => !src || t.src.includes(src));
+    root.innerHTML = terms.map(t => {
+      const names = t.src.map(s => (WIKI.sources.find(x => x.id === s) || {name:s}).name).join(" · ");
+      const open = only === t.id ? " open" : "";
+      const pin = only === t.id ? " data-pin" : "";
+      const defs = t.src.map(s => `<p><b>${(WIKI.sources.find(x=>x.id===s)||{name:s}).name}</b> ${t.defs[s]}</p>`).join("");
+      return `<details class="more"${open} id="${t.id}"><summary>${t.name} <span class="mute">${names}</span></summary><div class="body">${defs}</div></details>`;
+    }).join("");
+    if (only && document.getElementById(only)) document.getElementById(only).scrollIntoView({block:"start"});
+  };
+  window.onFilter = paint;
+  paint(new URLSearchParams(location.search).get("src") || "");
+});
+</script>
+</body></html>

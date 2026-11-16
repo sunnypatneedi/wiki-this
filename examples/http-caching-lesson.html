@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Freshness lifetime · Lesson</title>
+<script src="../references/sample/looks.js"></script>
+<script src="../assets/shell/look.js"></script>
+<link rel="stylesheet" href="../assets/shell/base.css">
+<script src="../references/sample/data.js"></script>
+<script src="../assets/shell/app.js"></script>
+<script src="../assets/shell/tip.js" defer></script>
+<style>
+.hd{padding:48px 0 24px;grid-column:1 / -1}
+.hd h1{font-size:44px;max-width:16ch}
+.dek{margin-top:12px;font-size:20px;line-height:1.4;color:var(--body);max-width:36ch}
+.crumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mute);margin-bottom:16px}
+.prose{grid-column:1 / span 8;font-size:16px;line-height:1.6;color:var(--body);display:grid;gap:16px;padding-bottom:48px}
+.fig{grid-column:1 / -1;background:var(--panel);border:1px solid var(--rule);border-radius:var(--r);padding:24px;margin:8px 0 32px}
+.fig svg{display:block;width:100%;height:auto}
+.card{grid-column:9 / span 4;align-self:start;background:var(--panel);border:1px solid var(--rule);border-radius:var(--r);padding:16px;display:grid;gap:8px}
+.card h2{font-size:16px}
+.card p{font-size:14px;color:var(--body)}
+.tl{display:grid;gap:8px;padding:32px 0}
+.tl a{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:16px;font-weight:500}
+.st{padding:64px 0 0;max-width:640px}
+.st h2{font-size:20px;margin-bottom:8px}
+.st p{color:var(--body)}
+.q{margin-top:16px}
+.q label{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:14px;cursor:pointer}
+.fb{margin-top:12px;font-size:14px;color:var(--body)}
+.fb.bad{color:var(--ink)}
+.rail{position:sticky;top:80px;display:grid;gap:8px;font-size:12px}
+.rail a[aria-current=step]{font-weight:600;color:var(--ink)}
+.rail a{color:var(--mute)}
+@media (max-width:700px){.hd h1{font-size:28px}.card{margin-top:24px}}
+</style>
+</head>
+<body>
+
+<header class="lhead">
+  <a class="bd" data-keep href="article.html">HTTP Caching <span>Lessons</span></a>
+  <div class="r"><a class="back" href="article.html"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>Back to the article</a></div>
+</header>
+<main class="lmain g12">
+  <nav class="rail" style="grid-column:1 / span 3" aria-label="Steps">
+    <a href="#s1">1. Concept</a>
+    <a href="#s2">2. Example</a>
+    <a href="#s3">3. Try it</a>
+    <a href="#s4">4. Check</a>
+    <a href="#s5">5. Recap</a>
+  </nav>
+  <div style="grid-column:4 / span 8">
+    <p class="lbl">Lesson · 5 steps</p>
+    <h1 style="font-size:44px;margin:8px 0 8px">Freshness lifetime</h1>
+    <p class="dek">From the HTTP Caching wiki. A local preview.</p>
+
+    <section class="st" id="s1">
+      <h2>1. Concept</h2>
+      <p>A cache may reuse a response only while that response is fresh. The usual way to set that lifetime is Cache-Control: max-age, a number of seconds counted from the origin response.</p>
+    </section>
+    <section class="st" id="s2">
+      <h2>2. Example</h2>
+      <p>A stylesheet is served with Cache-Control: max-age=86400. For the next day, the browser can use its stored copy without asking the server again. After that, it is no longer fresh.</p>
+    </section>
+    <section class="st" id="s3">
+      <h2>3. Try it</h2>
+      <p>A shared cache has a response with Cache-Control: private, max-age=600. What should it do?</p>
+      <div class="q">
+        <fieldset data-why="private means a shared cache must not store the response. max-age would only apply to a single-user cache.">
+          <legend class="sr">Choose one</legend>
+          <label><input type="radio" name="q1" data-ok="true"> Not store it at all</label>
+          <label><input type="radio" name="q1"> Serve it for 600 seconds</label>
+          <label><input type="radio" name="q1"> Store it, but revalidate every time</label>
+          <p class="fb" hidden></p>
+        </fieldset>
+      </div>
+    </section>
+    <section class="st" id="s4">
+      <h2>4. Check</h2>
+      <p>When freshness ends, a cache can send If-None-Match with the stored ETag. A 304 Not Modified lets it keep the body it already has.</p>
+    </section>
+    <section class="st" id="s5">
+      <h2>5. Recap</h2>
+      <p>Freshness is a lifetime. Validation is what happens after. Shared caches have stricter rules than a browser cache.</p>
+    </section>
+  </div>
+</main>
+<footer class="foot">
+  <span>Want a full course on this? <a class="link" href="https://sunnypatneedi.com/prompts?src=wiki-this#wiki-this">Join the list</a></span>
+  <span>This file sends nothing.</span>
+</footer>
+</body></html>
