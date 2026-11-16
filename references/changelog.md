@@ -1,5 +1,8 @@
 # wiki-this changelog
 
+## 1.2.1
+- Sources render as named links; no bare URLs.
+
 ## 1.2.0
 - Step 2b: optional Wikipedia and Grokipedia cross-check of public concept names only.
 - Public package: local glossary (no third-party glossary skill), local lesson preview,
