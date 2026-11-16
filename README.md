@@ -14,16 +14,41 @@ Each lesson ends with a link to join a waitlist. The lesson file itself collects
 
 ## Install
 
-Copy this folder into your agent's skills directory, or add the repo with your agent's
-skill installer once it is public.
+The folder you copy must be named `wiki-this` and must contain `SKILL.md`. Then ask the agent to `/wiki-this` on a source you can read.
 
-| Agent | Skills folder |
-| --- | --- |
-| Claude Code | `~/.claude/skills/wiki-this/` |
-| Cursor | `.cursor/skills/wiki-this/` in the project, or your user skills folder |
-| Codex | `~/.codex/skills/wiki-this/` |
+One-line install, user-wide, for Claude Code, Cursor, Codex and OpenClaw:
 
-The folder must contain `SKILL.md`. Then ask the agent to `/wiki-this` on a source you can read.
+```sh
+npx skills add sunnypatneedi/wiki-this --skill wiki-this -g -a claude-code -a cursor -a codex -a openclaw -y
+```
+
+That writes the skill to `~/.agents/skills/wiki-this/`. Cursor and Codex load that folder. The same command also adds:
+
+- Claude Code: a symlink at `~/.claude/skills/wiki-this/`
+- OpenClaw: a symlink at `~/.openclaw/skills/wiki-this/`
+
+Or copy the folder by hand:
+
+| Agent | User folder | Project folder |
+| --- | --- | --- |
+| Claude Code | `~/.claude/skills/wiki-this/` | `.claude/skills/wiki-this/` |
+| Cursor | `~/.cursor/skills/wiki-this/` or `~/.agents/skills/wiki-this/` | `.cursor/skills/wiki-this/` or `.agents/skills/wiki-this/` |
+| Codex | `~/.agents/skills/wiki-this/` | `.agents/skills/wiki-this/` |
+| OpenClaw | `~/.openclaw/skills/wiki-this/` or `~/.agents/skills/wiki-this/` | workspace `skills/wiki-this/` or `.agents/skills/wiki-this/` |
+
+Tested Nov 2026: Claude Code, Codex and OpenClaw load it. Cursor uses the same folder format.
+
+Codex still loads the older user path `~/.codex/skills/wiki-this/`. Prefer `~/.agents/skills/` for new installs.
+
+OpenClaw also has its own installer:
+
+```sh
+openclaw skills install git:sunnypatneedi/wiki-this
+```
+
+Add `--global` to install into `~/.openclaw/skills/` for every local agent.
+
+This repo is a standalone skill folder, not a Claude Code plugin or a Cursor marketplace plugin, so `/plugin install` does not apply yet.
 
 Smoke test, from this folder:
 
@@ -31,7 +56,7 @@ Smoke test, from this folder:
 sh scripts/build-sample.sh /tmp/sample-wiki
 ```
 
-Open `/tmp/sample-wiki/article.html`.
+Open `/tmp/sample-wiki/examples/article.html`.
 
 ## Example output
 
