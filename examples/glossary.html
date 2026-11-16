@@ -1,123 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-page="glossary">
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Glossary · HTTP Caching Wiki</title>
+<link rel="stylesheet" href="../assets/glossary/dict-tokens.css">
+<link rel="stylesheet" href="../assets/glossary/glossary-shell.css">
+<link rel="stylesheet" href="../assets/glossary/map.css">
 <script src="../references/sample/looks.js"></script>
 <script src="../assets/shell/look.js"></script>
-<link rel="stylesheet" href="../assets/shell/base.css">
 <script src="../references/sample/data.js"></script>
-<script src="../assets/shell/app.js"></script>
-<script src="../assets/shell/tip.js" defer></script>
-<style>
-.hd{padding:48px 0 24px;grid-column:1 / -1}
-.hd h1{font-size:44px;max-width:16ch}
-.dek{margin-top:12px;font-size:20px;line-height:1.4;color:var(--body);max-width:36ch}
-.crumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mute);margin-bottom:16px}
-.prose{grid-column:1 / span 8;font-size:16px;line-height:1.6;color:var(--body);display:grid;gap:16px;padding-bottom:48px}
-.fig{grid-column:1 / -1;background:var(--panel);border:1px solid var(--rule);border-radius:var(--r);padding:24px;margin:8px 0 32px}
-.fig svg{display:block;width:100%;height:auto}
-.card{grid-column:9 / span 4;align-self:start;background:var(--panel);border:1px solid var(--rule);border-radius:var(--r);padding:16px;display:grid;gap:8px}
-.card h2{font-size:16px}
-.card p{font-size:14px;color:var(--body)}
-.tl{display:grid;gap:8px;padding:32px 0}
-.tl a{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:16px;font-weight:500}
-.st{padding:64px 0 0;max-width:640px}
-.st h2{font-size:20px;margin-bottom:8px}
-.st p{color:var(--body)}
-.q{margin-top:16px}
-.q label{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:14px;cursor:pointer}
-.fb{margin-top:12px;font-size:14px;color:var(--body)}
-.fb.bad{color:var(--ink)}
-.rail{position:sticky;top:80px;display:grid;gap:8px;font-size:12px}
-.rail a[aria-current=step]{font-weight:600;color:var(--ink)}
-.rail a{color:var(--mute)}
-@media (max-width:700px){.hd h1{font-size:28px}.card{margin-top:24px}}
-</style>
 </head>
 <body>
-
 <div class="app">
-
-<aside class="side" data-al="side">
-  <a class="brand" data-keep href="article.html">HTTP Caching <span class="sl">Wiki</span></a>
+<aside class="side" aria-hidden="true"></aside>
+<div>
+<div class="top" role="banner">
+  <button class="icon" type="button" data-act="menu" aria-expanded="false" aria-label="Open menu"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg></button>
+  <div class="search">
+    <label class="sr" for="q">Search the wiki</label>
+    <input id="q" type="search" placeholder="Search" autocomplete="off">
+    <kbd>⌘K</kbd>
+  </div>
+  <div class="r">
+    <button class="icon snd" type="button" data-sound-toggle aria-pressed="false" title="Sound is off" aria-label="Turn sound on">
+      <svg class="on" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 6.5h3l3.5-3v9l-3.5-3h-3z"/><path d="M11 6c.9.8.9 2.2 0 3M12.7 4.5c1.8 1.6 1.8 5.4 0 7"/></svg>
+      <svg class="off" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 6.5h3l3.5-3v9l-3.5-3h-3z"/><path d="M11.5 5.5l3 5M14.5 5.5l-3 5"/></svg>
+    </button>
+  </div>
+</div>
+<div class="mhead" role="banner"><span>HTTP Caching <span class="sl">Wiki</span></span><span class="mr">
+  <button class="icon snd" type="button" data-sound-toggle aria-pressed="false" title="Sound is off" aria-label="Turn sound on">
+    <svg class="on" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 6.5h3l3.5-3v9l-3.5-3h-3z"/><path d="M11 6c.9.8.9 2.2 0 3M12.7 4.5c1.8 1.6 1.8 5.4 0 7"/></svg>
+    <svg class="off" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 6.5h3l3.5-3v9l-3.5-3h-3z"/><path d="M11.5 5.5l3 5M14.5 5.5l-3 5"/></svg>
+  </button>
+  <button class="icon" type="button" data-act="menu" aria-expanded="false" aria-label="Open menu"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg></button>
+</span></div>
+<div class="mchips" role="region" aria-label="Source filter">
+  <button class="it" type="button" data-src="" aria-pressed="true">All</button>
+  <button class="it" type="button" data-src="mdn" aria-pressed="false">MDN</button>
+  <button class="it" type="button" data-src="rfc" aria-pressed="false">RFC 9111</button>
+</div>
+<div class="scrimd"></div>
+<div class="drawer" aria-label="Menu">
+  <div class="brand"><a href="article.html">HTTP Caching <span class="sl">Wiki</span></a>
+    <button class="icon" type="button" data-act="menu" aria-label="Close menu"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg></button>
+  </div>
   <div class="nav">
     <div>
       <div class="lbl" id="sl">Sources</div>
       <div role="group" aria-labelledby="sl">
-        <button class="it" data-src="" aria-pressed="true"><i class="mk all"></i>All<span class="n" data-sn="all"></span></button>
-        <button class="it" data-src="mdn" aria-pressed="false"><i class="mk"></i>MDN<span class="n" data-sn="mdn"></span></button>
-        <button class="it" data-src="rfc" aria-pressed="false"><i class="mk rf"></i>RFC 9111<span class="n" data-sn="rfc"></span></button>
+        <button class="it" type="button" data-src="" aria-pressed="true">All</button>
+        <button class="it" type="button" data-src="mdn" aria-pressed="false">MDN</button>
+        <button class="it" type="button" data-src="rfc" aria-pressed="false">RFC 9111</button>
       </div>
     </div>
-    <nav aria-labelledby="chl">
-      <div class="lbl" id="chl">Sections</div>
-      <a class="it" data-keep href="glossary.html" data-cz="freshness"><span>Freshness</span><span class="n" data-cn="freshness"></span></a>
-      <a class="it" data-keep href="glossary.html" data-cz="validation"><span>Validation</span><span class="n" data-cn="validation"></span></a>
-      <a class="it" data-keep href="glossary.html" data-cz="shared"><span>Shared caches</span><span class="n" data-cn="shared"></span></a>
-    </nav>
     <nav>
-      <a class="it" data-keep href="glossary.html" aria-current="page">Glossary</a>
-      <a class="it" data-keep href="article.html" >Freshness lifetime</a>
+      <a class="it" href="glossary.html" aria-current="page">Glossary</a>
+      <a class="it" href="article.html">Freshness lifetime</a>
     </nav>
   </div>
-  <div class="ft">2 sources · read only</div>
-</aside>
-
-<div>
-
-<div class="top">
-  <div class="search">
-    <label class="sr" for="q">Search terms</label>
-    <input id="q" type="search" placeholder="Search" autocomplete="off" aria-expanded="false" aria-controls="res">
-    <kbd>⌘K</kbd>
-    <div id="res" class="res" role="listbox"></div>
-  </div>
 </div>
 
-
-<div class="mhead"><span>HTTP Caching <span class="sl">Wiki</span></span><span class="mr"><button class="icon" data-act="menu" aria-expanded="false" aria-label="Open menu"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg></button></span></div>
-<div class="mchips" role="group" aria-label="Sources">
-  <button class="it" data-src="" aria-pressed="true"><i class="mk all"></i>All</button>
-  <button class="it" data-src="mdn" aria-pressed="false"><i class="mk"></i>MDN</button>
-  <button class="it" data-src="rfc" aria-pressed="false"><i class="mk rf"></i>RFC 9111</button>
-</div>
-<div class="scrimd"></div>
-<div class="drawer" aria-label="Menu">
-  <div class="brand"><a data-keep href="article.html">HTTP Caching <span class="sl">Wiki</span></a>
-    <button class="icon" data-act="menu" aria-label="Close menu"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg></button>
-  </div>
-</div>
-
-<main class="main">
-  <section class="hd">
-    <div class="lbl">Glossary</div>
-    <h1>Terms</h1>
-    <p class="dek">One definition per source, plus a short shared line.</p>
+<main class="main" id="page-glossary">
+  <section class="ge-stage" id="graph" aria-labelledby="g-title">
+    <div class="ge-field"></div>
+    <div class="ge-view">
+      <canvas class="ge-gl" aria-hidden="true"></canvas>
+      <div class="ge-labels" aria-hidden="true"></div>
+      <div class="ge-flat" hidden></div>
+    </div>
+    <div class="ge-slot ge-tl" data-map-obstacle>
+      <h1 id="g-title" class="ge-kick">Glossary</h1>
+      <p class="sr">A map of sample terms from MDN and RFC 9111. The A to Z list below has the same terms and definitions.</p>
+    </div>
+    <div class="ge-slot ge-tc" data-map-obstacle>
+      <div class="ge-chips" role="group" aria-label="Source">
+        <button class="ge-chip" type="button" data-src="" aria-pressed="true">All</button>
+        <button class="ge-chip" type="button" data-src="mdn" aria-pressed="false">MDN</button>
+        <button class="ge-chip" type="button" data-src="rfc" aria-pressed="false">RFC 9111</button>
+      </div>
+    </div>
+    <div class="ge-slot ge-tr" data-map-obstacle>
+      <div class="ge-switch" role="group" aria-label="View">
+        <button type="button" data-view="map" aria-pressed="true">Map</button>
+        <button type="button" data-view="list" aria-pressed="false">List</button>
+      </div>
+    </div>
+    <div class="ge-slot ge-br" data-map-obstacle>
+      <div class="ge-zoom" role="group" aria-label="Map view">
+        <button class="ge-ic" type="button" data-zoom="in" aria-label="Zoom in"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.5v9M3.5 8h9"/></svg></button>
+        <button class="ge-ic" type="button" data-zoom="out" aria-label="Zoom out"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8h9"/></svg></button>
+        <button class="ge-ic" type="button" data-zoom="fit" aria-label="Fit the whole map (Esc)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5v-3h3M10.5 2.5h3v3M13.5 10.5v3h-3M5.5 13.5h-3v-3"/><circle cx="8" cy="8" r="1.6"/></svg></button>
+      </div>
+    </div>
+    <p class="ge-toast" aria-hidden="true"><span>Drag to turn</span><i></i><span>Scroll to zoom</span></p>
+    <aside class="ge-sheet" aria-label="Term definition" hidden></aside>
   </section>
-  <div class="tl" id="terms"></div>
+  <h2 class="ge-listh" id="az">All terms, A to Z</h2>
+  <div class="tl" id="terms" aria-labelledby="az"></div>
 </main>
 </div>
 </div>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const root = document.getElementById("terms");
-  const q = new URLSearchParams(location.search);
-  const only = q.get("term");
-  const paint = (src) => {
-    const terms = Object.values(WIKI.byId).filter(t => !src || t.src.includes(src));
-    root.innerHTML = terms.map(t => {
-      const names = t.src.map(s => (WIKI.sources.find(x => x.id === s) || {name:s}).name).join(" · ");
-      const open = only === t.id ? " open" : "";
-      const pin = only === t.id ? " data-pin" : "";
-      const defs = t.src.map(s => `<p><b>${(WIKI.sources.find(x=>x.id===s)||{name:s}).name}</b> ${t.defs[s]}</p>`).join("");
-      return `<details class="more"${open} id="${t.id}"><summary>${t.name} <span class="mute">${names}</span></summary><div class="body">${defs}</div></details>`;
-    }).join("");
-    if (only && document.getElementById(only)) document.getElementById(only).scrollIntoView({block:"start"});
-  };
-  window.onFilter = paint;
-  paint(new URLSearchParams(location.search).get("src") || "");
-});
-</script>
-</body></html>
+<script src="../assets/glossary/wire.js"></script>
+<script src="../assets/glossary/map.js"></script>
+</body>
+</html>
