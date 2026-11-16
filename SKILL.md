@@ -2,7 +2,7 @@
 name: wiki-this
 description: "Use for /wiki-this, or when someone wants a wiki, knowledge base or domain guide generated from one or more folders, repos or projects, merged into one site with a filter per source."
 metadata:
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 # Wiki This
@@ -76,6 +76,10 @@ Check the model against two public encyclopedias so nothing a learner needs is m
   otherwise keep the project's meaning and add a "Commonly means…" note with both links. Add
   missing prerequisites as glossary terms tagged "general" with a public link. Never copy
   encyclopedia prose; summarise in your own words and cite.
+- **Cite as links, never bare URLs.** Every outside source renders as a clickable link labelled
+  with its name (`<a href="…" target="_blank" rel="noopener noreferrer">Name</a>`, or
+  `[Name](https://…)` where the glossary step takes rich text). Never write "Name (https://…)"
+  or any visible URL in a page.
 - Offline or both unavailable: skip the step and say so in the report.
 
 ## 3. Merge into one wiki
@@ -118,7 +122,8 @@ Each wiki gets a fresh look: light or dark, a base hue, one accent and one typef
 
 Build a Glossary page in the same shell: one term per row, the filter, and the same look. Shared
 terms show each source's meaning. A plain list is enough. Do not call a third-party glossary
-service, and do not add a new skill dependency.
+service, and do not add a new skill dependency. Any "Sources" line lists names as links (step 2
+rule); before finishing, check the built pages show no visible `https://` text.
 
 ## 7. Lesson preview and waitlist footer
 
