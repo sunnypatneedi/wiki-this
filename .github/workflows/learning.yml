@@ -19,3 +19,4 @@ jobs:
       - run: npm run learning:check
       - run: npx playwright install --with-deps chromium
       - run: npm run learning:browser
+      - run: npm run learning:connected-browser

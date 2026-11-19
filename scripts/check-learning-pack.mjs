@@ -18,6 +18,7 @@ assert.equal(pin.repository, 'https://github.com/sunnypatneedi/LearnerContextKit
 assert.match(pin.revision, /^[a-f0-9]{40}$/);
 assert.deepEqual(pin.files.map(file => file.path).sort(), [
   'assets/learning/learner-runtime.js', 'assets/learning/learner-runtime.mjs', 'assets/learning/LICENSE',
+  'assets/learning/learner-engine-client.js', 'assets/learning/learner-engine-client.mjs', 'assets/learning/learner-engine.mjs',
   'references/learning-pack.schema.json', 'scripts/lesson-cli.mjs',
 ].sort());
 for (const file of pin.files) {

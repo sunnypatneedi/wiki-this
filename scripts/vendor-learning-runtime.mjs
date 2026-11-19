@@ -18,9 +18,13 @@ if (execFileSync('git', ['status', '--porcelain', '--untracked-files=normal'], {
 }
 // Rebuild from that clean revision; never label stale dist files with a newer SHA.
 execFileSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['run', 'bundle:lesson'], { cwd: kit, stdio: 'inherit' });
+execFileSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['run', 'bundle:engine'], { cwd: kit, stdio: 'inherit' });
 const mappings = [
   ['dist/lesson/browser.js', 'assets/learning/learner-runtime.js'],
   ['dist/lesson/standalone.mjs', 'assets/learning/learner-runtime.mjs'],
+  ['dist/engine-client/browser.js', 'assets/learning/learner-engine-client.js'],
+  ['dist/engine-client/standalone.mjs', 'assets/learning/learner-engine-client.mjs'],
+  ['dist/engine/standalone.mjs', 'assets/learning/learner-engine.mjs'],
   ['LICENSE', 'assets/learning/LICENSE'],
   ['schemas/learning-pack.schema.json', 'references/learning-pack.schema.json'],
 ];
@@ -39,5 +43,5 @@ await writeFile(path.join(root, 'scripts/lesson-cli.mjs'), cli);
 files.push({ path: 'scripts/lesson-cli.mjs', sha256: createHash('sha256').update(cli).digest('hex') });
 const manifest = { schemaVersion: 'learner-runtime-pin-v1', repository: upstream, revision: args[3], files };
 await writeFile(path.join(root, 'assets/learning/PIN.json'), `${JSON.stringify(manifest, null, 2)}\n`);
-await writeFile(path.join(root, 'assets/learning/PIN.md'), `# Shared lesson runtime\n\nGenerated from [LearnerContextKit ${args[3].slice(0, 12)}](${upstream}/commit/${args[3]}). MIT license is included beside the bundles.\n\nThis is the local formative-practice export only. No model provider, account, telemetry, or connected freshness is configured. Source repository access may require authorization; consuming these MIT-licensed vendored builds does not.\n\nFiles and SHA-256 digests are recorded in PIN.json and checked by learning:check. The IIFE and ESM builds come from the same src/lesson/index.ts entry point. The CLI only substitutes its import path.\n\nTo update: check out the intended Kit commit, run npm ci and npm run bundle:lesson there, then run node scripts/vendor-learning-runtime.mjs --kit PATH --revision FULL_COMMIT_SHA here. Verify the provided revision matches that checkout and review the upstream changes. Run npm run learning:check and npm run learning:browser before committing. Never hand-edit the generated runtime, CLI, schema, or digests.\n`);
+await writeFile(path.join(root, 'assets/learning/PIN.md'), `# Shared lesson runtime\n\nGenerated from [LearnerContextKit ${args[3].slice(0, 12)}](${upstream}/commit/${args[3]}). MIT license is included beside the bundles.\n\nThe ordinary lesson runtime stays local and performs no network I/O. Separate optional Engine client and Node host bundles support the served connected example. No model provider or production identity is configured. Source repository access may require authorization; consuming these MIT-licensed vendored builds does not.\n\nFiles and SHA-256 digests are recorded in PIN.json and checked by learning:check. The local IIFE and ESM builds share src/lesson/index.ts. Optional client builds share src/engine-client/index.ts; the Node host uses src/engine-host/index.ts. The local CLI only substitutes its import path.\n\nTo update: check out the intended Kit commit, run npm ci, npm run bundle:lesson and npm run bundle:engine there, then run node scripts/vendor-learning-runtime.mjs --kit PATH --revision FULL_COMMIT_SHA here. Verify the provided revision matches that checkout and review the upstream changes. Run npm run learning:check, npm run learning:browser and npm run learning:connected-browser before committing. Never hand-edit the generated runtime, CLI, schema, or digests.\n`);
 console.log(`Vendored ${files.length} files from ${args[3]}.`);

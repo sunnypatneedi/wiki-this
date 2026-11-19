@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Freshness lifetime · Connected demo</title>
+<script src="../references/sample/looks.js"></script>
+<script src="../assets/shell/look.js"></script>
+<link rel="stylesheet" href="../assets/shell/base.css">
+<link rel="stylesheet" href="../assets/learning/lesson.css">
+<script src="../references/sample/data.js"></script>
+<script src="../assets/shell/app.js"></script>
+<script src="../references/sample/learning-pack.js" defer></script>
+<script src="../assets/learning/learner-runtime.js" defer></script>
+<script src="../assets/learning/learner-engine-client.js" defer></script>
+<script src="../assets/learning/connected-demo.js" defer></script>
+<script src="../assets/learning/wiki-adapter.js" defer></script>
+</head>
+<body>
+<header class="lhead">
+  <a class="bd" data-keep href="article.html">HTTP Caching <span>Lessons</span></a>
+  <div class="r"><a class="back" data-keep href="article.html"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>Back to the article</a></div>
+</header>
+<main class="lesson-page">
+  <header class="lesson-intro">
+    <p class="lbl">Connected demonstration · synthetic context</p>
+    <h1>Freshness lifetime</h1>
+    <p>Choose a synthetic starting point and see source freshness alongside a pinned practice activity.</p>
+  </header>
+
+  <section class="lesson-connect" aria-labelledby="lesson-connect-title">
+    <h2 id="lesson-connect-title">Choose a demo context</h2>
+    <p>This demonstration uses authored sample histories, not your personal learning profile. Connect sends the selected profile and your practice actions to this demo host, which can check its approved public sources.</p>
+    <form id="lesson-connect-form" class="lesson-connect-form">
+      <label for="lesson-demo-profile">Starting point
+        <select id="lesson-demo-profile" name="profile">
+          <option value="unknown">Unknown: start with a question</option>
+          <option value="guided">Guided: use an example</option>
+          <option value="check">Check: try a new problem</option>
+        </select>
+      </label>
+      <label for="lesson-update-window">Update window
+        <select id="lesson-update-window" name="windowHours">
+          <option value="24">Past 24 hours</option>
+          <option value="168" selected>Past 7 days</option>
+          <option value="720">Past 30 days</option>
+        </select>
+      </label>
+      <div class="lesson-connect-actions">
+        <button id="lesson-connect" class="btn pri" type="submit">Connect demo</button>
+        <a class="btn sec" data-keep href="http-caching-lesson.html">Use offline lesson</a>
+      </div>
+    </form>
+    <p id="lesson-connection-status" class="lesson-status" role="status" aria-live="polite">No connection has been made.</p>
+    <p id="lesson-persistence" class="lesson-note">The demo uses server process memory. Keep this tab open to reconnect; there is no account sync.</p>
+    <div id="lesson-connection-controls" class="lesson-connect-actions" hidden>
+      <button id="lesson-reconnect" class="btn sec" type="button">Reconnect</button>
+      <button id="lesson-refresh" class="btn sec" type="button">Check source freshness</button>
+      <button id="lesson-cancel" class="btn sec" type="button">Cancel run</button>
+    </div>
+  </section>
+
+  <p id="lesson-availability" class="lesson-status" role="status" hidden></p>
+
+  <section id="lesson-player" data-entry-id="freshness-lifetime" data-runtime="connected" aria-label="Connected practice" hidden>
+    <div class="lesson-context">
+      <p id="lesson-source-scope"></p>
+      <p id="lesson-freshness"></p>
+    </div>
+    <div class="lesson-layout">
+      <div>
+        <section id="lesson-turn" class="lesson-turn" aria-labelledby="lesson-turn-title"></section>
+        <p id="lesson-status" class="lesson-status" role="status" aria-live="polite"></p>
+        <button id="lesson-retry" class="btn sec lesson-retry" type="button" hidden>Retry last action</button>
+      </div>
+      <aside class="lesson-summary" aria-label="Your practice">
+        <section>
+          <h2>Demo starting point</h2>
+          <p id="lesson-starting-point">A synthetic profile will choose the starting activity.</p>
+          <p id="lesson-connected-context" class="lesson-note"></p>
+        </section>
+        <section>
+          <h2>Practice so far</h2>
+          <div id="lesson-progress"></div>
+          <p class="lesson-note">These self-checks remain provisional practice evidence, not verified mastery.</p>
+        </section>
+      </aside>
+    </div>
+    <button id="lesson-plain-toggle" class="btn sec lesson-plain-toggle" type="button" aria-controls="lesson-fallback" aria-expanded="false">Read the plain lesson</button>
+  </section>
+
+  <section id="lesson-updates-panel" class="lesson-updates" aria-labelledby="lesson-updates-title" hidden>
+    <h2 id="lesson-updates-title">Source freshness</h2>
+    <p id="lesson-updates-summary" class="lesson-status" role="status" aria-live="polite">Waiting for a source check.</p>
+    <p class="lesson-note">Source dates and byte changes are shown separately from the lesson. They do not automatically change the current question or establish that instructional content is new.</p>
+    <div id="lesson-updates"></div>
+  </section>
+
+  <section id="lesson-fallback" class="lesson-fallback" aria-label="Plain lesson">
+    <p class="lesson-fallback-intro">The five-step reading version works without the interactive player. It includes MDN and RFC 9111; source filters apply to interactive practice. Reading this version does not save progress.</p>
+    <section id="s1">
+      <h2>1. Concept</h2>
+      <p>A stored response is fresh while its current age is less than its freshness lifetime. Cache-Control: max-age sets that lifetime in seconds. Existing age matters too.</p>
+    </section>
+    <section id="s2">
+      <h2>2. Example</h2>
+      <p>A browser cache stores a reusable stylesheet with Cache-Control: max-age=86400. With a current age of 3600 seconds, it has 82800 seconds of freshness left. Once its age reaches 86400 seconds, the response is stale.</p>
+    </section>
+    <section id="s3">
+      <h2>3. Try it</h2>
+      <p>A shared cache receives a response with Cache-Control: private, max-age=600. What should it do?</p>
+      <div class="q">
+        <fieldset data-why="An unqualified private directive means a shared cache must not store the response. max-age does not override that restriction.">
+          <legend>Choose one</legend>
+          <label><input type="radio" name="q1" data-ok="true"> Not store it</label>
+          <label><input type="radio" name="q1"> Serve it for 600 seconds</label>
+          <label><input type="radio" name="q1"> Store it, but revalidate every time</label>
+          <p class="fb" hidden></p>
+        </fieldset>
+      </div>
+      <details><summary>Read the explanation</summary><p>An unqualified private directive prevents storage in a shared cache. A freshness lifetime does not override that restriction.</p></details>
+    </section>
+    <section id="s4">
+      <h2>4. Check</h2>
+      <p>A reusable response has max-age=600 and a current age of 480 seconds. How much freshness remains?</p>
+      <details><summary>Check your answer</summary><p>120 seconds. Subtract current age from the freshness lifetime. When the current age reaches 600 seconds, the response is stale.</p></details>
+    </section>
+    <section id="s5">
+      <h2>5. Recap</h2>
+      <p>Freshness compares lifetime with current age. Storage rules still apply. A stale response may be validated with a conditional request when an appropriate validator is available; freshness and validation answer different questions.</p>
+      <p class="lesson-note">Sources: <a class="link" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching" target="_blank" rel="noopener noreferrer">MDN HTTP caching</a> and <a class="link" href="https://www.rfc-editor.org/rfc/rfc9111.html" target="_blank" rel="noopener noreferrer">RFC 9111</a>. This offline page does not check for updates.</p>
+    </section>
+  </section>
+</main>
+<footer class="foot">
+  <span>Want a full course on this? <a class="link" href="https://sunnypatneedi.com/prompts?src=wiki-this#wiki-this">Join the list</a></span>
+  <span>Synthetic demo · process memory · full courses are not live.</span>
+</footer>
+</body>
+</html>
