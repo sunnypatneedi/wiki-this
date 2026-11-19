@@ -21,10 +21,12 @@ unless a step says otherwise.
 - `scripts/`: `lookgen.mjs` (looks), `shot.mjs` (self-check), `build-sample.sh`,
   `build-glossary-fixture.mjs`, `check-glossary.mjs`.
 - `assets/shell/`: `base.css`, `look.js`, `app.js`, `tip.js` (the shell).
+- `assets/learning/`: shared `learner-runtime.js` and its `PIN.md`, plus the wiki-only
+  presenter `wiki-adapter.js` and `lesson.css`.
 - `assets/glossary/`: pinned map (`map.js`, `map.css`, `dict-tokens.css`, Inter fonts,
   `wire.js`, `glossary-shell.css`). See `assets/glossary/PIN.md`.
 - `references/`: `spec.md` (design rules), `sample/` (neutral example data and looks).
-- `examples/`: a sample five-step lesson page.
+- `examples/`: a sample portable lesson page with a five-step reading fallback.
 - Smoke test: `sh <skill-dir>/scripts/build-sample.sh /tmp/sample-wiki`, then open
   `article.html`. Glossary map fixture:
   `node <skill-dir>/scripts/build-glossary-fixture.mjs /tmp/glossary-fixture`.
@@ -47,7 +49,7 @@ Settle the rest with these defaults, and list the ones you used in the report:
 | Audience | Builders who work across these projects |
 | Size | One article per core concept (usually 4-8), 24-80 glossary terms, 5-7 sections |
 | Look | A fresh generated look (step 4) |
-| Lessons | Local preview pages with a join-the-list footer (step 7) |
+| Lessons | Local practice with a plain reading fallback and join-the-list footer (step 7) |
 
 ## 2. Ingest and model
 
@@ -114,8 +116,9 @@ Each wiki gets a fresh look: light or dark, a base hue, one accent and one typef
   Phones: 16px margins, sidebar as a drawer, filter as chips.
 - **Article:** crumb, headline, one-line dek, collapsed "Source", lesson card top right; then a
   full-width diagram, prose with hover terms, "Shared with …". Section pages list terms.
-- **Lesson card:** "Learn this in a minute", meta "5 steps". The card opens the local lesson
-  preview. It does not charge anyone or upload text.
+- **Lesson card:** "Try what you know", with an honest time estimate. Use an ordinary
+  local link with `data-keep` so the current look and `?src=` filter carry into the lesson.
+  It does not charge anyone or upload text.
 - **Sound (optional):** one mute toggle in the top bar (and phone header). Hover tick on term
   links, whoosh on a source-filter change. Off until the first click or key, silent and disabled
   with its reason under reduced motion.
@@ -159,22 +162,37 @@ Fixture and gate: `node <skill-dir>/scripts/build-glossary-fixture.mjs <out>` th
 `node <skill-dir>/scripts/check-glossary.mjs <out> <shots>` (Playwright + axe at 1440, 390 and
 360 in light and dark; fails on horizontal overflow, contrast violations or label overlap).
 
-## 7. Lesson preview and waitlist footer
+## 7. Portable local lessons
 
-A lesson turns one article into five steps (concept, example, try it, check, recap). Write it
-locally as ordinary HTML in the wiki folder. A paid full-course upgrade is planned and is not
+A lesson turns one article into an ordinary HTML page with a portable learning pack.
+Use the bundled shared runtime for a diagnostic, authored practice, hints and self-checks.
+Keep the five-step reading version (concept, example, try it, check, recap) in the HTML as
+a no-JS and runtime-unavailable fallback. A paid full-course upgrade is planned and is not
 built. Never upload source text, call a billing API, open a spend endpoint, or charge anyone.
+
+Use [the local lesson integration rules](references/learning.md) and
+`examples/http-caching-lesson.html` as the host reference.
+
+- Keep content-only, versioned LearningPacks separate from private learner checkpoints.
+- Reuse the pinned runtime; the wiki adapter handles source scope, safe text rendering and
+  explicit export/import. Start with unknown competence and keep self-checks provisional.
+- Preserve `?src=`, reject unknown source selections, and show missing task coverage.
+- Use classic scripts and bundled data for `file://`. Require no model, browser storage or
+  network. Show recorded source check dates without claiming a live refresh.
+- Keep the plain reading version and host waitlist footer usable if the player cannot start.
+
+### Waitlist footer
 
 Every generated lesson page ends with this footer, and no other ask:
 
 > Want a full course on this? [Join the list](https://sunnypatneedi.com/prompts?src=wiki-this#wiki-this)
 
 The host is a placeholder until the waitlist landing has a domain. Do not invent a domain or
-point the link at some other product. The lesson file itself sends nothing and collects nothing;
-the link opens in the browser only if the reader chooses it.
+point the link at some other product. The lesson file itself sends nothing; practice remains
+in the tab unless explicitly exported. The link opens only if the reader chooses it.
 
-"Make a lesson" may show the five-step preview and that footer. If the course service is not
-live, say "not live yet".
+"Make a lesson" may show local practice with a five-step reading fallback and that footer.
+If the course service is not live, say "not live yet".
 
 ## 8. Design rules (check every screen)
 

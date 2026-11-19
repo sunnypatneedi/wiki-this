@@ -9,8 +9,10 @@ The only network step is optional: step 2b may look up **public concept names on
 definitions. Source text, file paths and private names are never sent. You can skip that
 step offline.
 
-A five-step lesson preview can be written next to an article. Full courses are not live.
-Each lesson ends with a link to join a waitlist. The lesson file itself collects nothing.
+A local lesson can be written next to an article. The HTTP caching example now runs a
+portable lesson session: a short starting question, authored examples and hints, and
+practice with feedback. It works from `file://` without a model or server. A plain
+five-step reading version remains available. Full courses are not live.
 
 ## What you get
 
@@ -78,16 +80,88 @@ Open `/tmp/sample-wiki/examples/article.html`.
 
 ## Example output
 
-`examples/http-caching-lesson.html` is a five-step lesson on HTTP caching, written from
-public docs (MDN and RFC 9111). The footer reads "Want a full course on this? Join the list".
-The link opens the waitlist at `https://sunnypatneedi.com/prompts#wiki-this`. The lesson file itself
-sends nothing.
+`examples/http-caching-lesson.html` is a local HTTP caching lesson drawn from MDN and
+RFC 9111. Open `examples/article.html`, choose a source filter if wanted, and follow
+**Open the lesson**. The ordinary link also works without the player.
+
+The player starts with an unknown competency level. It checks authored multiple-choice
+tasks, records hints and other support, and reports local practice evidence. Correct
+answers do not become a verified mastery claim. The source filter narrows eligible tasks;
+if the pack cannot support a selection, the player says so.
+
+The footer reads "Want a full course on this? Join the list". Its link opens the waitlist
+at `https://sunnypatneedi.com/prompts?src=wiki-this#wiki-this` only when chosen.
+
+## Portable lesson integration
+
+The sample separates three small pieces:
+
+| Piece | Location | Responsibility |
+| --- | --- | --- |
+| Learning pack | `references/sample/learning-pack.js` | Generated, content-only tasks and source provenance. No learner profile. |
+| Shared runtime | `assets/learning/learner-runtime.js` | The bundled LearnerContextKit session facade, with its origin recorded in `PIN.md`. |
+| Wiki adapter | `assets/learning/wiki-adapter.js` and `lesson.css` | Host source scope, safe text rendering, controls and local checkpoint files. |
+
+The canonical `references/sample/learning-pack.json` fixture generates `learning-pack.js`;
+the build checks that the two agree. The script form lets the same sample open directly from disk without fetching
+JSON or requiring JavaScript modules. Do not hand-edit the generated runtime or data.
+
+The host calls `LearnerLesson.createLessonSession({ pack, entryId, sourceIds })` and
+renders the views returned by `next()`, `answer()` and `help()`. The same headless
+contract supports another app or a skill host. The wiki does not implement a second
+assessment or scheduling engine. This first version supports text and single-choice
+practice; it does not generate a course, connect a model, or refresh web sources.
+
+### Headless skill or app host
+
+The vendored `scripts/lesson-cli.mjs` runs the same runtime through one JSON request on
+stdin and one response on stdout. From this repository folder, start the sample with:
+
+```sh
+node --input-type=module -e '
+import fs from "node:fs";
+const pack = JSON.parse(fs.readFileSync("references/sample/learning-pack.json", "utf8"));
+console.log(JSON.stringify({operation: "start", pack, entryId: "freshness-lifetime"}));
+' | node scripts/lesson-cli.mjs
+```
+
+The response contains `view`, `progress` and `checkpoint`. The **host must store the
+checkpoint** and send it with the same pack on later calls. Use `resume` to reopen the
+saved screen, `answer` or `help` for an actual learner action, and `next` to advance from
+feedback. `progress` reads progress without presenting another activity. The CLI is
+stateless, takes no command-line arguments, makes no network calls and does not save
+progress files itself. Invalid input emits a JSON error on stderr and exits nonzero.
+
+See [the headless protocol and agent instructions](references/learning.md#headless-host-protocol)
+for complete request shapes, retry behavior and checkpoint handling. This is a local
+integration entry point; it does not install or register a skill in an agent product.
+
+### Keeping progress
+
+Progress stays in memory for the current tab. Closing or refreshing the page loses it
+unless the learner chooses **Save or resume → Export progress**. Import validates the
+pack, entry, source scope and recorded actions before replacing the current session.
+It can resume a compatible checkpoint from another host of the same runtime.
+
+Checkpoint files contain local answers and assistance history. Keep them private; never
+include them in a published wiki or learning pack. They are editable and untrusted, and
+restored observations remain provisional. This does not depend on browser storage or
+promise automatic persistence across `file://` pages.
+
+### Source dates and fallback
+
+The player shows recorded source check dates. An offline snapshot does not claim to be
+current today. Links open only when the reader chooses them; no background refresh runs.
+If scripts are unavailable, the five-step reading version remains usable. It includes
+both listed sources and clearly distinguishes itself from filtered interactive practice.
 
 ## Privacy
 
 - Wikis are built locally. Nothing is uploaded unless you later ask to publish.
 - The optional cross-check sends public concept names only, over GET, with no keys.
-- Generated lesson files send nothing and collect nothing.
+- Generated lesson files send nothing automatically. The interactive player holds practice
+  answers in the tab; only an explicit export writes a checkpoint file.
+- Published content never contains learner IDs, answers, private context or credentials.
 - The waitlist, when it exists, stores an email and that the signup came from wiki-this.
   It is a page you open in the browser, not something the HTML file posts on its own.
 

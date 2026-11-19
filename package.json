@@ -5,7 +5,10 @@
   "description": "Agent skill that builds a local wiki with a pinned glossary map",
   "scripts": {
     "fixture:glossary": "node scripts/build-glossary-fixture.mjs /tmp/glossary-fixture",
-    "check:glossary": "node scripts/check-glossary.mjs /tmp/glossary-fixture /tmp/glossary-shots"
+    "check:glossary": "node scripts/check-glossary.mjs /tmp/glossary-fixture /tmp/glossary-shots",
+    "learning:compile": "node scripts/compile-learning-pack.mjs",
+    "learning:check": "node scripts/compile-learning-pack.mjs --check && node scripts/check-learning-pack.mjs",
+    "learning:browser": "node scripts/check-learning-browser.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
