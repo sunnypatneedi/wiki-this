@@ -8,7 +8,9 @@
     "check:glossary": "node scripts/check-glossary.mjs /tmp/glossary-fixture /tmp/glossary-shots",
     "learning:compile": "node scripts/compile-learning-pack.mjs",
     "learning:check": "node scripts/compile-learning-pack.mjs --check && node scripts/check-learning-pack.mjs",
-    "learning:browser": "node scripts/check-learning-browser.mjs"
+    "learning:browser": "node scripts/check-learning-browser.mjs",
+    "learning:serve": "node scripts/serve-connected-learning.mjs",
+    "learning:connected-browser": "node scripts/check-connected-browser.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",

@@ -545,7 +545,7 @@ var LearnerLesson = (() => {
       id(input.requestId, "requestId");
   }
   function createLessonSession(input) {
-    object(input, ["pack", "entryId", "sourceIds", "goal", "minutes", "sessionId", "clock", "newId"], "lesson options");
+    object(input, ["pack", "entryId", "sourceIds", "goal", "minutes", "sessionId", "initialTaskId", "clock", "newId"], "lesson options");
     const pack = validateLearningPack(input.pack);
     id(input.entryId, "entryId");
     const entry = pack.entries.find((candidate) => candidate.id === input.entryId);
@@ -563,7 +563,9 @@ var LearnerLesson = (() => {
       minutes(input.minutes);
     if (input.sessionId !== void 0)
       id(input.sessionId, "sessionId");
-    const constraints = { sessionId: input.sessionId, goal: input.goal, minutes: input.minutes };
+    if (input.initialTaskId !== void 0)
+      id(input.initialTaskId, "initialTaskId");
+    const constraints = { sessionId: input.sessionId, goal: input.goal, minutes: input.minutes, initialTaskId: input.initialTaskId };
     const clock = input.clock ?? (() => (/* @__PURE__ */ new Date()).toISOString());
     const newId = input.newId ?? secureId;
     const sourceIds = [...input.sourceIds ?? pack.sources.map((source) => source.id)];
@@ -574,8 +576,15 @@ var LearnerLesson = (() => {
     const selected = new Set(sourceIds);
     const supporting = (references) => references.some((source) => selected.has(source));
     const eligible = entry.taskIds.map((taskId) => pack.tasks.find((task) => task.id === taskId)).filter((task) => supporting(task.sourceIds));
+    if (input.initialTaskId !== void 0 && !eligible.some((task) => task.id === input.initialTaskId))
+      fail("Initial task is not eligible for this entry/source filter");
     const packCanonical = canonical(pack);
-    let meta = { sessionId: input.sessionId ?? newId(), goal: input.goal ?? entry.objective, minutes: input.minutes ?? 5 };
+    let meta = {
+      sessionId: input.sessionId ?? newId(),
+      goal: input.goal ?? entry.objective,
+      minutes: input.minutes ?? 5,
+      ...input.initialTaskId !== void 0 ? { initialTaskId: input.initialTaskId } : {}
+    };
     id(meta.sessionId, "sessionId");
     string(meta.goal, 2e3, "goal");
     minutes(meta.minutes);
@@ -610,6 +619,8 @@ var LearnerLesson = (() => {
       if (pending(current) || current.turns.length >= Math.ceil(metadata.minutes / 2))
         return void 0;
       const last = current.turns.at(-1);
+      if (!last && metadata.initialTaskId !== void 0)
+        return eligible.find((task) => task.id === metadata.initialTaskId);
       if (last?.task.kind === "check" && last.answer?.correct)
         return void 0;
       const unserved = eligible.filter((task) => !current.turns.some((turn) => turn.task.id === task.id));
@@ -800,6 +811,7 @@ var LearnerLesson = (() => {
         sourceIds,
         goal: meta.goal,
         minutes: meta.minutes,
+        ...meta.initialTaskId !== void 0 ? { initialTaskId: meta.initialTaskId } : {},
         history: state.history
       });
     }
@@ -880,7 +892,7 @@ var LearnerLesson = (() => {
       async restore(saved) {
         if (used)
           return fail("Restore requires a fresh lesson session");
-        object(saved, ["schemaVersion", "trust", "packId", "packVersion", "packCanonical", "sessionId", "entryId", "sourceIds", "goal", "minutes", "history"], "checkpoint");
+        object(saved, ["schemaVersion", "trust", "packId", "packVersion", "packCanonical", "sessionId", "entryId", "sourceIds", "goal", "minutes", "initialTaskId", "history"], "checkpoint");
         if (saved.schemaVersion !== "lesson-checkpoint-v1" || saved.trust !== "local-provisional")
           fail("Unsupported lesson checkpoint");
         if (saved.packId !== pack.id || saved.packVersion !== pack.version || saved.packCanonical !== packCanonical)
@@ -893,13 +905,23 @@ var LearnerLesson = (() => {
         id(saved.sessionId, "checkpoint.sessionId");
         string(saved.goal, 2e3, "checkpoint.goal");
         minutes(saved.minutes);
-        if (constraints.sessionId !== void 0 && constraints.sessionId !== saved.sessionId || constraints.goal !== void 0 && constraints.goal !== saved.goal || constraints.minutes !== void 0 && constraints.minutes !== saved.minutes)
+        if (saved.initialTaskId !== void 0) {
+          id(saved.initialTaskId, "checkpoint.initialTaskId");
+          if (!eligible.some((task) => task.id === saved.initialTaskId))
+            fail("Checkpoint initial task is not eligible");
+        }
+        if (constraints.sessionId !== void 0 && constraints.sessionId !== saved.sessionId || constraints.goal !== void 0 && constraints.goal !== saved.goal || constraints.minutes !== void 0 && constraints.minutes !== saved.minutes || constraints.initialTaskId !== void 0 && constraints.initialTaskId !== saved.initialTaskId)
           fail("Checkpoint options mismatch");
         array(saved.history, 0, LESSON_LIMITS.history, "checkpoint.history");
         saved.history.forEach(validateEvent);
         if (canonical(saved).length > LESSON_LIMITS.checkpointCharacters)
           fail("Checkpoint is too large");
-        const restored = { sessionId: saved.sessionId, goal: saved.goal, minutes: saved.minutes };
+        const restored = {
+          sessionId: saved.sessionId,
+          goal: saved.goal,
+          minutes: saved.minutes,
+          ...saved.initialTaskId !== void 0 ? { initialTaskId: saved.initialTaskId } : {}
+        };
         const at = now();
         let candidate = emptyState();
         for (const event of saved.history)

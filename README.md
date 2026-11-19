@@ -155,12 +155,53 @@ current today. Links open only when the reader chooses them; no background refre
 If scripts are unavailable, the five-step reading version remains usable. It includes
 both listed sources and clearly distinguishes itself from filtered interactive practice.
 
+## Connected demonstration
+
+The optional served demo connects the same presenter to LearnerEngine using **synthetic
+learner context**. It does not connect your personal learning history. Start it locally:
+
+```sh
+node scripts/serve-connected-learning.mjs
+```
+
+Open `http://127.0.0.1:4179/examples/http-caching-connected.html`, choose **Unknown**,
+**Guided** or **Check**, then choose **Connect demo**. No session or source request starts
+just by loading the page. The host selects an authored starting activity from the chosen
+synthetic history and can check its approved public MDN and RFC sources. The source
+panel distinguishes successful checks, failures, old snapshots and dated update signals;
+a byte change does not establish that a lesson needs new instruction.
+
+The ordinary `http-caching-lesson.html` remains local and works directly from disk.
+The connected example refuses connected operation under `file://` and offers an ordinary
+link to that offline lesson. It never silently switches or uploads a local checkpoint.
+
+The demo keeps sessions in **server process memory**. It issues an ephemeral token after
+the deliberate profile selection and holds it only in the page's memory. Keep the tab
+open to reconnect; closing it loses the in-memory credential, and stopping the server
+loses demo sessions. There is no account sync, deployed identity service or remote
+checkpoint import/export.
+
+For deterministic source fixtures or an explicit offline-source demonstration:
+
+```sh
+node scripts/serve-connected-learning.mjs --fixture-sources
+node scripts/serve-connected-learning.mjs --offline-sources
+```
+
+The default uses approved public live source checks, which can fail or time out.
+`--port 4179` selects a port; `--port 0` lets the system assign one. Use one server command
+at a time. See [connected host integration](references/connected-learning.md) for the
+request boundary, streaming, retries, cancellation and production host responsibilities.
+
 ## Privacy
 
 - Wikis are built locally. Nothing is uploaded unless you later ask to publish.
 - The optional cross-check sends public concept names only, over GET, with no keys.
-- Generated lesson files send nothing automatically. The interactive player holds practice
+- Ordinary offline lesson files send nothing automatically. The local player holds practice
   answers in the tab; only an explicit export writes a checkpoint file.
+- The separate connected demo sends actions only after an explicit connection. Its host
+  may check approved public sources; it never receives the whole wiki or a personal
+  profile from the page.
 - Published content never contains learner IDs, answers, private context or credentials.
 - The waitlist, when it exists, stores an email and that the signup came from wiki-this.
   It is a page you open in the browser, not something the HTML file posts on its own.

@@ -1,15 +1,27 @@
 {
   "schemaVersion": "learner-runtime-pin-v1",
   "repository": "https://github.com/sunnypatneedi/LearnerContextKit",
-  "revision": "b857e361f643ecb1118c4ad2cc9b3a8ffdea6e11",
+  "revision": "d5418c08f6e82da0ace9f5219e8fdb6f81873d74",
   "files": [
     {
       "path": "assets/learning/learner-runtime.js",
-      "sha256": "26c1590c622b6d99bc6df009bdffbc2b8169dba56cc3a58da4b1322a10046442"
+      "sha256": "525589a5cad465b5814034eaeeea6092d88087341b064f36a7fe51564590e470"
     },
     {
       "path": "assets/learning/learner-runtime.mjs",
-      "sha256": "6a27626faa2fe088b4718059e763b37d62c106665fad87a602c1dfd95ac369b7"
+      "sha256": "ad89be8823911cf3c5d0758977a464ac20345c3e8e22964b4cc561caeb5f7500"
+    },
+    {
+      "path": "assets/learning/learner-engine-client.js",
+      "sha256": "0f3c7ba4aa2f9e9bc4b59e1ff49ba55917d7ed4f83f63bb8f10e01c171ef7656"
+    },
+    {
+      "path": "assets/learning/learner-engine-client.mjs",
+      "sha256": "17d55c9622fbcc175f0984028ab06de80c85cc11873ec58d76f79007ab82bb13"
+    },
+    {
+      "path": "assets/learning/learner-engine.mjs",
+      "sha256": "088a192a131d7ba3242c76c13afc85dd88a45e282469777da7db661afb6d0665"
     },
     {
       "path": "assets/learning/LICENSE",

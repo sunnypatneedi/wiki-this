@@ -241,3 +241,7 @@ Offer publishing; publish only after a yes (repos, pushes and deploys are extern
   server-held sessions, DPoP-bound tokens for any future MCP or CLI client, no long-lived tokens
   in the skill or wiki folder, sandboxes `--network none`.
 - Never set up payments, accounts or paid infrastructure in a run.
+
+### Optional connected demonstration
+
+Keep ordinary exported lessons local. A deliberately served host may use the separate Engine adapter described in `references/connected-learning.md`. Never embed credentials, raw learner history or server checkpoints in shared content. Live checks remain separate from the pinned activity and must distinguish discovery, publisher dates and byte changes. The bundled reference server uses synthetic profiles and process-memory sessions; it is not a production identity service.

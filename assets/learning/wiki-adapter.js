@@ -1,5 +1,6 @@
-/* A host adapter, not a second lesson engine. Authored content is rendered as text.
-   No fetch, remote scripts, analytics, storage dependency or background sync. */
+/* A presenter, not a second lesson engine. Authored content is rendered as text.
+   Ordinary file pages use the local runtime. A served demo may explicitly supply
+   an authorized host; transport and credentials never belong to this presenter. */
 (function () {
   'use strict';
 
@@ -56,6 +57,11 @@
     const plainToggle = byId('lesson-plain-toggle');
     const pack = globalThis.LEARNER_PACK;
     const runtime = globalThis.LearnerLesson;
+    const connected = player.dataset.runtime === 'connected';
+    // A shared or downloaded file never consumes connected host configuration.
+    const connectedHost = connected && (location.protocol === 'http:' || location.protocol === 'https:')
+      ? globalThis.LEARNER_CONNECTED_HOST : null;
+    const retryButton = byId('lesson-retry');
 
     function unavailable(message) {
       availability.textContent = message;
@@ -64,9 +70,17 @@
       player.hidden = true;
     }
 
-    if (!runtime || typeof runtime.createLessonSession !== 'function' || !pack) {
+    if (connected && (!connectedHost || typeof connectedHost.open !== 'function')) {
+      unavailable('Connected practice needs the deliberately served demo. You can open the ordinary offline lesson instead.');
+      return;
+    }
+    if (!pack || (!connected && (!runtime || typeof runtime.createLessonSession !== 'function'))) {
       unavailable('Interactive practice is unavailable. You can read the plain lesson below.');
       return;
+    }
+    if (connected) {
+      const savePanel = player.querySelector('.lesson-save');
+      if (savePanel) savePanel.hidden = true;
     }
 
     const sourceId = new URLSearchParams(location.search).get('src') || '';
@@ -93,7 +107,26 @@
     const sourceName = sourceId ? wikiSources.find(source => source.id === sourceId).name : null;
     byId('lesson-source-scope').textContent = sourceName
       ? 'Source filter: ' + sourceName + '.' : 'Using all sources in this learning pack.';
-    byId('lesson-freshness').textContent = 'Offline snapshot. Check dates are listed with each source; this page does not look for live updates.';
+    byId('lesson-freshness').textContent = connected
+      ? 'The activity stays pinned to its source snapshot. Freshness results appear separately below.'
+      : 'Offline snapshot. Check dates are listed with each source; this page does not look for live updates.';
+
+    function syncConnectedControls() {
+      if (!connected || !session) return;
+      const pending = typeof session.hasPending === 'function' && session.hasPending();
+      const cancelled = session.getState().status === 'cancelled';
+      if (retryButton) {
+        retryButton.hidden = !pending;
+        retryButton.disabled = busy;
+      }
+      if (pending || cancelled) {
+        player.querySelectorAll('.lesson-actions button, input[name="lesson-choice"]').forEach(control => {
+          control.disabled = true;
+        });
+      }
+      if (cancelled) status.textContent = 'The server confirmed cancellation. Further lesson actions are stopped.';
+      if (typeof connectedHost.setLessonBusy === 'function') connectedHost.setLessonBusy(busy);
+    }
 
     function showProgress(progress) {
       progressHost.replaceChildren();
@@ -109,7 +142,9 @@
         list.append(group);
       });
       progressHost.append(list);
-      byId('lesson-starting-point').textContent = progress.status === 'unassessed'
+      byId('lesson-starting-point').textContent = connected
+        ? 'This session uses a synthetic starting point. It does not describe your personal learning history.'
+        : progress.status === 'unassessed'
         ? 'Unknown. A short first question gives us a place to begin.'
         : 'Your answers give us a starting point for practice. A competency level has not been established.';
       if (progress.complete) {
@@ -136,6 +171,7 @@
       busy = true;
       status.textContent = '';
       player.setAttribute('aria-busy', 'true');
+      if (connected && typeof connectedHost.setLessonBusy === 'function') connectedHost.setLessonBusy(true);
       const controls = Array.from(player.querySelectorAll('button, input'))
         .map(control => ({ control, disabled: control.disabled }));
       controls.forEach(({ control }) => { control.disabled = true; });
@@ -143,13 +179,20 @@
         const view = await operation();
         if (view) render(view, focusTarget);
       } catch (error) {
-        status.textContent = 'That action could not finish. Your current lesson is still here. Try again or export your progress.';
+        status.textContent = connected
+          ? (session && session.getState().status === 'cancelled'
+            ? 'The server confirmed cancellation. Further lesson actions are stopped.'
+            : session && session.hasPending()
+            ? 'The action outcome is not confirmed. Retry the last action before choosing a different answer or continuing.'
+            : 'The connected action could not finish. Reconnect to check the saved state, then try again.')
+          : 'That action could not finish. Your current lesson is still here. Try again or export your progress.';
       } finally {
         busy = false;
         player.removeAttribute('aria-busy');
         controls.forEach(({ control, disabled }) => {
           if (control.isConnected) control.disabled = disabled;
         });
+        syncConnectedControls();
       }
     }
 
@@ -171,7 +214,7 @@
       };
       const activityLabel = view.kind === 'question'
         ? 'Question ' + (view.progress.attempted + 1)
-        : view.kind === 'feedback' ? 'Review your answer' : 'Local practice';
+        : view.kind === 'feedback' ? 'Review your answer' : connected ? 'Connected demo practice' : 'Local practice';
       turnHost.append(element('p', 'lbl', activityLabel));
       const heading = element('h2', '', phaseNames[view.phase] || view.title);
       heading.id = 'lesson-turn-title';
@@ -281,7 +324,9 @@
         turnHost.append(actions);
       } else if (view.kind === 'complete') {
         if (view.explanation) turnHost.append(element('p', 'lesson-note', view.explanation));
-        turnHost.append(element('p', 'lesson-note', 'Export your progress below if you want to keep it. This page will not send reminders or sync your answers.'));
+        turnHost.append(element('p', 'lesson-note', connected
+          ? 'Demo progress lasts only while this server process is running. Keep this tab open to reconnect; there is no account sync or checkpoint export.'
+          : 'Export your progress below if you want to keep it. This page will not send reminders or sync your answers.'));
       } else if (view.kind === 'needs_content') {
         turnHost.append(element('p', 'lesson-note', 'The selected sources do not cover another suitable task. The plain lesson and the article remain available.'));
       }
@@ -305,6 +350,7 @@
         const target = focusTarget === 'hint' ? byId('lesson-latest-hint') : heading;
         if (target) target.focus({ preventScroll: true });
       }
+      syncConnectedControls();
     }
 
     plainToggle.addEventListener('click', () => {
@@ -313,7 +359,7 @@
       plainToggle.textContent = fallback.hidden ? 'Read the plain lesson' : 'Hide the plain lesson';
     });
 
-    exportButton.addEventListener('click', () => run(async () => {
+    if (!connected && exportButton) exportButton.addEventListener('click', () => run(async () => {
       const checkpoint = await session.checkpoint();
       const blob = new Blob([JSON.stringify(checkpoint, null, 2) + '\n'], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -327,7 +373,7 @@
       checkpointStatus.textContent = 'Checkpoint exported. It contains local practice history, not verified mastery.';
     }));
 
-    importInput.addEventListener('change', () => {
+    if (!connected && importInput) importInput.addEventListener('change', () => {
       const file = importInput.files && importInput.files[0];
       if (!file) return;
       run(async () => {
@@ -359,16 +405,42 @@
       }, 'heading');
     });
 
+    if (connected && retryButton) retryButton.addEventListener('click', () => run(async () => {
+      const view = await session.retry();
+      pendingAnswer = null;
+      pendingHelp = null;
+      return view;
+    }, 'heading'));
+
+    if (connected && typeof connectedHost.subscribe === 'function') {
+      connectedHost.subscribe(event => {
+        // Background events update metadata only. Replacing a view is reserved for
+        // an explicit reconnect, so source checks cannot erase a learner's choice.
+        if (event.type === 'resume' && event.view && !busy) {
+          render(event.view, 'heading');
+          status.textContent = session && session.hasPending()
+            ? 'Connection restored. Retry the pending action to confirm its receipt before continuing.'
+            : 'Saved lesson state restored.';
+        }
+        if (event.type === 'status' && event.reply && event.reply.status === 'cancelled') {
+          status.textContent = 'The server confirmed cancellation. Further lesson actions are stopped.';
+        }
+        syncConnectedControls();
+      });
+    }
+
     (async () => {
       try {
-        session = runtime.createLessonSession(options);
+        session = connected ? await connectedHost.open(options) : runtime.createLessonSession(options);
         const first = await session.next();
         render(first);
         player.hidden = false;
         fallback.hidden = true;
         availability.hidden = true;
       } catch (error) {
-        unavailable('Interactive practice could not start for this source selection. The plain reading version below remains available.');
+        unavailable(connected
+          ? 'Connected practice could not start. The ordinary offline lesson remains available from the link above.'
+          : 'Interactive practice could not start for this source selection. The plain reading version below remains available.');
       }
     })();
   }
