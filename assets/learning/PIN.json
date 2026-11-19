@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "learner-runtime-pin-v1",
+  "repository": "https://github.com/sunnypatneedi/LearnerContextKit",
+  "revision": "b857e361f643ecb1118c4ad2cc9b3a8ffdea6e11",
+  "files": [
+    {
+      "path": "assets/learning/learner-runtime.js",
+      "sha256": "26c1590c622b6d99bc6df009bdffbc2b8169dba56cc3a58da4b1322a10046442"
+    },
+    {
+      "path": "assets/learning/learner-runtime.mjs",
+      "sha256": "6a27626faa2fe088b4718059e763b37d62c106665fad87a602c1dfd95ac369b7"
+    },
+    {
+      "path": "assets/learning/LICENSE",
+      "sha256": "ff9554e46ab116b4f8899ed7f41d619b0b03fecc45be1ecaf3fc91fe06fe8b84"
+    },
+    {
+      "path": "references/learning-pack.schema.json",
+      "sha256": "c404415ae761fb9f65c1da80db2cde5e301c383ca7a435c52d6703bb44ec87e2"
+    },
+    {
+      "path": "scripts/lesson-cli.mjs",
+      "sha256": "bcd5a693b56c4024cbeddd82f9e604b205eec89212f886b0119d41ecd8317d46"
+    }
+  ]
+}
