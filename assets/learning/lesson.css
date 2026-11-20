@@ -1,6 +1,7 @@
 /* The lesson presenter uses the host's colours, font and spacing. No remote assets. */
 .lesson-page{max-width:1120px;margin:0 auto;padding:48px 48px 64px}
 .lesson-intro{max-width:720px;margin-bottom:32px}
+.lesson-intro .lesson-free{margin-top:8px;max-width:56ch}
 .lesson-intro h1{font-size:44px;margin:8px 0 16px}
 .lesson-intro>p:last-child{font-size:20px;line-height:1.4;color:var(--body);max-width:48ch}
 .lesson-layout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:32px;align-items:start}

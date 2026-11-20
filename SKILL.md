@@ -2,7 +2,7 @@
 name: wiki-this
 description: "Use for /wiki-this, or when someone wants a wiki, knowledge base or domain guide generated from one or more folders, repos or projects, merged into one site with a filter per source."
 metadata:
-  version: "1.3.0"
+  version: "1.3.1"
 ---
 
 # Wiki This
@@ -181,6 +181,21 @@ Use [the local lesson integration rules](references/learning.md) and
   network. Show recorded source check dates without claiming a live refresh.
 - Keep the plain reading version and host waitlist footer usable if the player cannot start.
 
+### Free lesson header
+
+Every generated lesson page opens with this label and note at the top of the intro, before
+the title:
+
+> Free lesson · about N minutes
+>
+> This first lesson is free. More lessons on this topic will need a paid plan, coming soon.
+
+Use `<p class="lbl">` for the duration label and
+`<p class="lesson-note lesson-free">` for the free-plan note, immediately before `<h1>`.
+Paid lessons are not live, so say "coming soon". Do not add billing UI, a Stripe call, a
+spend endpoint, or any other network charge. The existing rule against charging still
+applies.
+
 ### Waitlist footer
 
 Every generated lesson page ends with this footer, and no other ask:
@@ -191,8 +206,8 @@ The host is a placeholder until the waitlist landing has a domain. Do not invent
 point the link at some other product. The lesson file itself sends nothing; practice remains
 in the tab unless explicitly exported. The link opens only if the reader chooses it.
 
-"Make a lesson" may show local practice with a five-step reading fallback and that footer.
-If the course service is not live, say "not live yet".
+"Make a lesson" may show local practice with a five-step reading fallback, the free-lesson
+header, and that footer. If the course service is not live, say "not live yet".
 
 ## 8. Design rules (check every screen)
 

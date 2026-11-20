@@ -1,5 +1,10 @@
 # wiki-this changelog
 
+## 1.3.1
+- Generated lesson pages open with a Free lesson label and a note that more lessons on the
+  topic will need a paid plan, coming soon. No billing, Stripe, spend endpoint or network
+  charge is added. The waitlist footer stays the same.
+
 ## 1.3.0
 - Glossary ships the pinned Dark map (dictionary-this visual language): full-bleed stage,
   docked term sheet, A to Z list underneath as the accessible and no-WebGL fallback,
