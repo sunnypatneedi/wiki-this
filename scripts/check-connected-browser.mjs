@@ -52,6 +52,11 @@ try {
     page.on('request', request => { if (new URL(request.url()).pathname === '/api/demo-session') authRequests++; });
     const before = requests.length;
     await page.goto(connectedURL.href);
+    assert.match(await page.locator('.lesson-intro .lbl').innerText(), /Free lesson/);
+    assert.match(
+      await page.locator('.lesson-intro .lesson-free').innerText(),
+      /This first lesson is free\. More lessons on this topic will need a paid plan, coming soon\./,
+    );
     assert.equal(await page.locator('#lesson-player').isVisible(), false);
     assert.equal(authRequests, 0, 'Loading the page must not authenticate.');
     assert.equal(requests.length, before, 'Loading the page must not start an Engine session.');

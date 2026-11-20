@@ -56,4 +56,13 @@ const changed = structuredClone(pack);
 changed.tasks[0].prompt += ' Changed.';
 const fresh = createLessonSession({ pack: changed, entryId });
 await assert.rejects(fresh.restore(checkpoint));
-console.log('Learning pack, wiki references, pinned artifacts, assistance, retries, and headless checkpoint parity passed.');
+const freeNote = /This first lesson is free\. More lessons on this topic will need a paid plan, coming soon\./;
+for (const relative of ['examples/http-caching-lesson.html', 'examples/http-caching-connected.html']) {
+  const html = await readFile(new URL(relative, root), 'utf8');
+  assert.match(html, /class="lbl">Free lesson/);
+  assert.match(html, /class="lesson-note lesson-free"/);
+  assert.match(html, freeNote);
+  assert.match(html, /Want a full course on this\?/);
+  assert.doesNotMatch(html, /stripe|billing|spend endpoint|charge/i);
+}
+console.log('Learning pack, wiki references, pinned artifacts, assistance, retries, headless checkpoint parity, and free-lesson intro passed.');

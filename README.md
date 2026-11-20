@@ -89,8 +89,10 @@ tasks, records hints and other support, and reports local practice evidence. Cor
 answers do not become a verified mastery claim. The source filter narrows eligible tasks;
 if the pack cannot support a selection, the player says so.
 
-The footer reads "Want a full course on this? Join the list". Its link opens the waitlist
-at `https://sunnypatneedi.com/prompts?src=wiki-this#wiki-this` only when chosen.
+Every lesson page opens with a Free lesson label and a note that more lessons on the topic
+will need a paid plan, coming soon. No billing call is added. The footer reads "Want a full
+course on this? Join the list". Its link opens the waitlist at
+`https://sunnypatneedi.com/prompts?src=wiki-this#wiki-this` only when chosen.
 
 ## Portable lesson integration
 

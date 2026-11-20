@@ -21,6 +21,11 @@ try {
   page.on('pageerror', error => errors.push(error.message));
   const lessonURL = pathToFileURL(path.join(fixture, 'examples/http-caching-lesson.html')).href;
   await page.goto(lessonURL);
+  assert.match(await page.locator('.lesson-intro .lbl').innerText(), /Free lesson · about 5 minutes/);
+  assert.match(
+    await page.locator('.lesson-intro .lesson-free').innerText(),
+    /This first lesson is free\. More lessons on this topic will need a paid plan, coming soon\./,
+  );
   await page.locator('#lesson-player').waitFor({ state: 'visible' });
   assert.match(await page.locator('#lesson-starting-point').innerText(), /Unknown/);
   assert.equal(await page.locator('#lesson-fallback').isVisible(), false);
@@ -109,9 +114,10 @@ try {
   await plain.goto(lessonURL);
   assert.equal(await plain.locator('#lesson-fallback').isVisible(), true);
   assert.equal(await plain.locator('#lesson-player').isVisible(), false);
+  assert.match(await plain.locator('.lesson-intro .lesson-free').innerText(), /This first lesson is free/);
   assert.deepEqual(network, [], 'Local lessons must not issue HTTP requests.');
   assert.deepEqual(errors, []);
-  console.log('Browser flow, hints, exact resume, rejected imports, source scope, mobile layout, accessibility, safe rendering and no-network mode passed.');
+  console.log('Browser flow, free-lesson intro, hints, exact resume, rejected imports, source scope, mobile layout, accessibility, safe rendering and no-network mode passed.');
 } finally {
   if (browser) await browser.close();
   await rm(fixture, { recursive: true, force: true });

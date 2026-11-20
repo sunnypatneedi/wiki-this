@@ -3,6 +3,15 @@
 Integration rules for the local lesson host. The public pack holds authored content; the
 shared runtime tracks an individual practice session.
 
+**Mark the lesson as free**
+
+- Put `Free lesson · about N minutes` in the intro label (`<p class="lbl">`).
+- Put this note immediately before the title, with class `lesson-note lesson-free`:
+  "This first lesson is free. More lessons on this topic will need a paid plan, coming
+  soon."
+- Do not add billing, a Stripe call, a spend endpoint or any other network charge. Paid
+  lessons are not live; say "coming soon". Keep the waitlist footer unchanged.
+
 **Keep content and learner history separate**
 
 - Author content against the LearningPack contract used by the bundled runtime: versioned
